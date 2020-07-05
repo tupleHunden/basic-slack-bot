@@ -15,6 +15,7 @@ You will need the following Python libraries to use this bot:
 ```python
 pip3 install requests
 pip3 install slackclient
+pip3 install python-dotenv
 ```
 
 ## Authors
