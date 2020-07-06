@@ -75,17 +75,15 @@ def send_taco(taco_api):
         This function will send the taco recipe to slack.
     """
     taco_data = taco_api.json()
-    taco_url = taco_data["url"]
-    taco_name = taco_data["name"].title()
 
     try:
         SLACK_BOT.chat_postMessage(
             channel=SLACK_CHANNEL_PROJECT,
-            text=f"*Taco Name:* {taco_name}\n"
-                 f"*Recipe URL:* {taco_url}",
+            text=f"*Taco Name:* {taco_data['name']}\n"
+                 f"*Recipe URL: *{taco_data['url'].title()}"
         )
     except SlackApiError as slack_api_auth_error:
         sys.exit(slack_api_auth_error)
 
 
-send_taco(taco_api=get_taco())
+send_taco(get_taco())
