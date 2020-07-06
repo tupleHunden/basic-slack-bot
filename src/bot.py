@@ -41,6 +41,10 @@ def get_member():
     user_id_specific = user_ids[1]
     user_info_api = requests.get(f"https://slack.com/api/users.info?token="
                                  f"{SLACK_OAUTH_TOKEN}&user={user_id_specific}&pretty=1")
+
+    if user_info_api.status_code != 200:
+        sys.exit(f"Status Code Error on {user_info_api}")
+
     user_api_data = user_info_api.json()
     user_json = user_api_data["user"]
     user_name_json = user_json["name"].upper()
