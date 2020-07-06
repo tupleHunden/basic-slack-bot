@@ -33,26 +33,31 @@ SLACK_BOT = WebClient(token=SLACK_OAUTH_TOKEN)
 
 def get_member():
     """
-        This function will pull the user names of the slack channel: Project
+        This function will get the non-bot user in the slack channel.
     """
     members = SLACK_BOT.conversations_members(channel=SLACK_CHANNEL_PROJECT)
     user_ids = members["members"]
 
-    user_id_specific = user_ids[1]
     user_info_api = requests.get(f"https://slack.com/api/users.info?token="
-                                 f"{SLACK_OAUTH_TOKEN}&user={user_id_specific}&pretty=1")
+                                 f"{SLACK_OAUTH_TOKEN}&user={user_ids[1]}&pretty=1")
 
     if user_info_api.status_code != 200:
         sys.exit(f"Status Code Error on {user_info_api}")
 
+    return user_info_api
+
+
+def send_member(user_info_api):
+    """
+        This function will send a message to slack with the non-bot user's name.
+    """
     user_api_data = user_info_api.json()
     user_json = user_api_data["user"]
-    user_name_json = user_json["name"].upper()
 
     try:
         SLACK_BOT.chat_postMessage(
             channel=SLACK_CHANNEL_PROJECT,
-            text=f"Current non-bot Users: {user_name_json}"
+            text=f"*Current non-bot Users:* {user_json['name'].upper()}"
         )
     except SlackApiError as slack_api_auth_error:
         sys.exit(slack_api_auth_error)
@@ -86,4 +91,5 @@ def send_taco(taco_api):
         sys.exit(slack_api_auth_error)
 
 
+send_member(get_member())
 send_taco(get_taco())
