@@ -60,13 +60,20 @@ def get_member():
 
 def get_taco():
     """
-        This function will return a random taco recipe.
+        This function will get a random taco recipe.
     """
     taco_api = requests.get("http://taco-randomizer.herokuapp.com/random/?full-taco=true")
 
     if taco_api.status_code != 200:
         sys.exit(f"Status Code Error on {taco_api}")
 
+    return taco_api
+
+
+def send_taco(taco_api):
+    """
+        This function will send the taco recipe to slack.
+    """
     taco_data = taco_api.json()
     taco_url = taco_data["url"]
     taco_name = taco_data["name"].title()
@@ -80,13 +87,4 @@ def get_taco():
         sys.exit(slack_api_auth_error)
 
 
-def main():
-    """
-        This is the main execution point for the application.
-    """
-    get_member()
-    get_taco()
-
-
-if __name__ == "__main__":
-    main()
+send_taco(taco_api=get_taco())
