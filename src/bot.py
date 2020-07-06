@@ -81,7 +81,8 @@ def send_taco(taco_api):
     try:
         SLACK_BOT.chat_postMessage(
             channel=SLACK_CHANNEL_PROJECT,
-            text=f"*Taco Name:* {taco_name}\n*Recipe URL:* {taco_url}",
+            text=f"*Taco Name:* {taco_name}\n"
+                 f"*Recipe URL:* {taco_url}",
         )
     except SlackApiError as slack_api_auth_error:
         sys.exit(slack_api_auth_error)
